@@ -1,0 +1,23 @@
+//@version=5
+strategy("Strategy 001", overlay=true)
+
+ema20 = ta.ema(close, 20)
+ema50 = ta.ema(close, 50)
+ema100 = ta.ema(close, 100)
+ha_open = request.security(ticker.heikinashi(syminfo.tickerid), timeframe.period, open)
+ha_close = request.security(ticker.heikinashi(syminfo.tickerid), timeframe.period, close)
+
+plot(series=ema20, color=color.yellow)
+plot(series=ema50, color=color.green)
+plot(series=ema100, color=color.red)
+
+// TODO: Minimal ROI
+// minimal_roi = [[60, 0.01], ["30", 0.03], ["20", 0.04], ["0", 0.05]] 
+
+// TODO: Optimal stoploss
+// stoploss = -0.1
+
+if ta.crossover(ema20, ema50) and ha_close > ema20 and ha_close > ha_open
+    strategy.entry("enter long", strategy.long, 10, when = strategy.position_size <= 0)
+if ta.crossover(ema50, ema100) and ha_close < ema20 and ha_open > ha_close
+    strategy.entry("enter short", strategy.short, 10, when = strategy.position_size > 0)
