@@ -1,0 +1,29 @@
+//@version=5
+strategy("Strategy 002")
+
+// Stoch
+stoch = ta.stoch(close, 3, 1, 14)
+slowk = stoch
+
+// RSI
+rsi = ta.rsi(close, 14)
+
+// Inverse Fisher transform on RSI, values [-1.0, 1.0]
+f_rsi := 0.1 * (rsi - 50)
+fisher_rsi =  (math.exp(2 * f_rsi) - 1) / (math.exp(2 * f_rsi) + 1)
+
+// Boillinger bands
+[bb_lowerband, bb_middleband, bb_upperband] = ta.bb(close, 20, 2)
+
+// SAR Parabol
+sar = ta.sar(0.02, 0.02, 0.2)
+
+// TODO: Hammer: values [0, 100]
+
+plot(series=rsi)
+
+if rsi < 30 and slowk < 20 and bb_lowerband > close
+    strategy.entry('enter long', strategy.long)
+if sar > close and fisher_rsi > 0.3
+    strategy.entry('enter short', strategy.short)
+
