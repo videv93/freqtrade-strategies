@@ -1,0 +1,18 @@
+//@version=5
+strategy("ADXMomentum")
+adx = ta.adx(close, 14);
+plus_di = ta.plus_di(close, 25)
+minus_di = ta.minus_di(close, 25)
+sar = ta.sar(close)
+mom = ta.mom(close, 24)
+
+// TODO: minimal ROI
+// minimal_roi = 0.01
+
+// TODO: stoploss
+// stoploss = -0.25
+
+if (adx > 25 and mon > 0 and plus_di > 25 and plus_di > minus_di)
+    strategy.entry(strategy.long)
+if (adx < 25 and mom < 0 and minus_di > 25 and plus_di < minus_di)
+    strategy.entry(strategy.short)
